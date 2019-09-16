@@ -2,13 +2,13 @@
 
 This is my homework repo for STAT 545A course, where I will organise the five assignments for the course in five different folders called hw01, hw02, hw03, hw04 and hw05.**These folders will be updated close to the due date of the assignment.** 
 
-|    **folder**    | **due date** |
-|------------------|--------------|
-| hw01             |  Sept 17,19  |
-| hw02             |  Sept 24,19  |
-| hw03             |  Oct  01,19  |
-| hw04             |  Oct  08,19  |
-| hw05             |  Oct  18,19  |
+   **folder**      | **due date** 
+ ------------------|--------------
+ hw01 |  Sept 17,19  
+ hw02 |  Sept 24,19  
+ hw03 |  Oct  01,19  
+ hw04 |  Oct  08,19  
+ hw05 |  Oct  18,19  
 
 #About me
 
