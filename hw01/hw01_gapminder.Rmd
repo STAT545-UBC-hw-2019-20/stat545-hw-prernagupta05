@@ -5,6 +5,8 @@ date:   16 September '19
 output: 
   html_document:
    toc: true
+   keep_md: true
+   theme: united
 ---
 
 ```{r, warning = FALSE, echo = FALSE}
