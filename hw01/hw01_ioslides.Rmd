@@ -1,8 +1,12 @@
 ---
 title: "hw01_ioslides"
-author: Prerna Gupta
-date:   16 September '19
-output: ioslides_presentation
+author: "Prerna Gupta"
+date: "16 September '19"
+output:
+  beamer_presentation: default
+  ioslides_presentation:
+    smaller: yes
+    widescreen: yes
 ---
 
 ```{r, warning = FALSE, echo = FALSE}
@@ -11,7 +15,8 @@ library(tibble)
 library(DT)
 ```
 
-# Gapminder data table
+## Gapminder data table {#gapminder-data-table .emphasized .flexbox .vcenter}
+
 
 ```{r, warning=FALSE, echo=FALSE}
 datatable(as_tibble(gapminder))
@@ -19,7 +24,11 @@ datatable(as_tibble(gapminder))
 
 <!-- This is a useful set of data for practising r markdown-->
 
-# Median life expectancy by continent
+## Median life expectancy by continent {#median-life-expectancy .emphasized .flexbox .vcenter}
+
+
+<div class= "centered">
 ```{r, warning=FALSE, echo=FALSE}
 aggregate(lifeExp ~ continent, gapminder, median)
 ```
+</div>

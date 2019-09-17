@@ -1,12 +1,14 @@
 ---
 title: "hw01_ioslides"
-author: Prerna Gupta
-date:   16 September '19
-output: 
+author: "Prerna Gupta"
+date: "16 September '19"
+output:
+  pdf_document:
+    toc: yes
   html_document:
-   toc: true
-   keep_md: true
-   theme: united
+    keep_md: yes
+    theme: united
+    toc: yes
 ---
 
 
