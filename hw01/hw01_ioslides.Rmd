@@ -2,9 +2,7 @@
 title: "hw01_ioslides"
 author: Prerna Gupta
 date:   16 September '19
-output: 
-  ioslides_presentation
-    template:
+output: ioslides_presentation
 ---
 
 ```{r, warning = FALSE, echo = FALSE}
