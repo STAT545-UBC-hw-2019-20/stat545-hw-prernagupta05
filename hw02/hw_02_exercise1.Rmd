@@ -1,9 +1,13 @@
 ---
 <<<<<<< HEAD
+<<<<<<< HEAD
 title: "hw_02"
 =======
 title: "hw_02_exercise1"
 >>>>>>> 5e7660d505f2b8c397bb7e71aba3b0ef1ed8d6a8
+=======
+title: "hw_02"
+>>>>>>> 4b0776b7eba1135b422ec984fe7875c0c02d8efa
 output: 
   html_document:
     keep_md : true
