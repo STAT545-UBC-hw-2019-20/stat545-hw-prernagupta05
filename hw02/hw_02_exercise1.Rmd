@@ -1,5 +1,5 @@
 ---
-title: "hw_02_exercise1"
+title: "hw_02"
 output: 
   html_document:
     keep_md : true
@@ -11,6 +11,7 @@ editor options:
 library(gapminder)
 library(tidyverse)
 ```
+Exercise 1: Basic dplyr
 
 ```{r}
 # 1.1 Using filter() to subset gapminder data to three countries of choice in the 1970’s.
@@ -55,5 +56,37 @@ gapminder %>%
   scale_x_log10("GDP per capita", labels = scales::dollar_format()) + 
   labs(title="Canada", y="Life Expectancy")
   
+```
+
+Exercise 2: Explore individual variables with dplyr
+
+I will be exploring two variables - life expectancy and continents
+
+To understand the possible values in the variable "continents" I will explore the number of observation per continent and how many unique countries are there in each continent.
+
+```{r}
+gapminder %>%
+  group_by(continent) %>%
+  summarise(n = n(),
+            n_countries = n_distinct(country)) %>%
+  rename(number_of_observations = n) %>%
+  rename(number_of_countries = n_countries)
+  
+``` 
+Asia and Africa have the largest number of countries.
+
+Now I will explore the variable life expectancy. I will first explore the range of the variable by continent in year 2007
+```{r}
+gapminder %>%
+  filter(year == "2007") %>%
+  group_by(continent) %>%
+  summarise(min_lifeExp = min(lifeExp), max_lifeExp = max(lifeExp)) %>%
+  mutate(range = max_lifeExp - min_lifeExp)
+```
+The range is largest for Asia and Africa. One of the reasons for this can be large number of countries as we saw in the previous table. However, Europe has only 3 countries less than Asia but its range of life expectancy is much smaller than Asia. 
+
+Now I will explore the summaries of lifeExp by continent to find typical values. 
+```{r}
+
 ```
 
