@@ -1,5 +1,9 @@
 ---
+<<<<<<< HEAD
 title: "hw_02"
+=======
+title: "hw_02_exercise1"
+>>>>>>> 5e7660d505f2b8c397bb7e71aba3b0ef1ed8d6a8
 output: 
   html_document:
     keep_md : true
@@ -11,7 +15,10 @@ editor options:
 library(gapminder)
 library(tidyverse)
 ```
+<<<<<<< HEAD
 Exercise 1: Basic dplyr
+=======
+>>>>>>> 5e7660d505f2b8c397bb7e71aba3b0ef1ed8d6a8
 
 ```{r}
 # 1.1 Using filter() to subset gapminder data to three countries of choice in the 1970’s.
@@ -58,6 +65,7 @@ gapminder %>%
   
 ```
 
+<<<<<<< HEAD
 Exercise 2: Explore individual variables with dplyr
 
 I will be exploring two variables - life expectancy and continents
@@ -90,3 +98,5 @@ Now I will explore the summaries of lifeExp by continent to find typical values.
 
 ```
 
+=======
+>>>>>>> 5e7660d505f2b8c397bb7e71aba3b0ef1ed8d6a8
