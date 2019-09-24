@@ -3,7 +3,7 @@ title: "hw01_gapminder"
 author: Prerna Gupta
 date:   16 September '19
 output: 
-  html_document:
+  github_document:
    toc: true
    keep_md: true
    theme: united
