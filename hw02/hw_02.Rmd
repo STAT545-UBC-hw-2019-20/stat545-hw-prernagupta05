@@ -2,6 +2,7 @@
 title: "hw_02"
 output: 
   github_document:
+    keep_md: true
 editor options: 
   chunk_output_type: inline 
 ---
