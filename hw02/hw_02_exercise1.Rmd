@@ -121,6 +121,26 @@ gapminder%>%
 Exercise 3: Explore various plot types. 
 
 ```{r}
-
+Orange %>% 
+  group_by(Tree) %>% 
+  select(age, circumference) %>% 
+  ggplot(aes(age, circumference, color=Tree)) +
+  geom_line() +
+  xlab("age") + 
+  labs(title="Age by Circumference of Orange Trees", y="Circumference") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
+This graph shows how the circumference of trees increase as their age increases. 
+
+```{r}
+Orange %>% 
+  filter(Tree == "2") %>% 
+  select(age, circumference) %>% 
+  ggplot(aes(circumference, age)) +
+  geom_bar(stat = "identity") + 
+  labs(title="Circumference by Age of Orange Tree 2") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
 
