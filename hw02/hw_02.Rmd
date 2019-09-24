@@ -148,7 +148,7 @@ filter(gapminder, country == c("Rwanda", "Afghanistan"))
 ```
 "==" is a logical operator that has here converted country into a vector of length 2 consisting of Rwanda and Afghanistan. "==" is meant to compare if two things are exactly equal. Since, here the vectors are not of equal length, so Vectors- Rwanda and Afghanistan are recycled.  
 
-To fix this we can use %in% which checks whether or not the object (here country) is contained in the other object(c(Rwanda, Afghanistan) or not and then filter drops the NA values. So we get the following table.
+To fix this we can use %in% which checks whether or not the object (here country) is contained in the other object(c(Rwanda, Afghanistan) or not and then filter drops the NA values. ?So we get the following table.
 ```{r}
 gapminder %>%
     filter (country %in% c("Rwanda", "Afghanistan"))
