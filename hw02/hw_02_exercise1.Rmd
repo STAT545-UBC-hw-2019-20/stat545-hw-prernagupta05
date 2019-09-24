@@ -1,13 +1,5 @@
 ---
-<<<<<<< HEAD
-<<<<<<< HEAD
 title: "hw_02"
-=======
-title: "hw_02_exercise1"
->>>>>>> 5e7660d505f2b8c397bb7e71aba3b0ef1ed8d6a8
-=======
-title: "hw_02"
->>>>>>> 4b0776b7eba1135b422ec984fe7875c0c02d8efa
 output: 
   html_document:
     keep_md : true
@@ -19,10 +11,9 @@ editor options:
 library(gapminder)
 library(tidyverse)
 ```
-<<<<<<< HEAD
+
 Exercise 1: Basic dplyr
-=======
->>>>>>> 5e7660d505f2b8c397bb7e71aba3b0ef1ed8d6a8
+
 
 ```{r}
 # 1.1 Using filter() to subset gapminder data to three countries of choice in the 1970’s.
@@ -69,7 +60,7 @@ gapminder %>%
   
 ```
 
-<<<<<<< HEAD
+
 Exercise 2: Explore individual variables with dplyr
 
 I will be exploring two variables - life expectancy and continents
@@ -79,11 +70,8 @@ To understand the possible values in the variable "continents" I will explore th
 ```{r}
 gapminder %>%
   group_by(continent) %>%
-  summarise(n = n(),
-            n_countries = n_distinct(country)) %>%
-  rename(number_of_observations = n) %>%
-  rename(number_of_countries = n_countries)
-  
+  summarise(number_of_observations = n(),
+            number_of_countries = n_distinct(country))
 ``` 
 Asia and Africa have the largest number of countries.
 
@@ -97,10 +85,42 @@ gapminder %>%
 ```
 The range is largest for Asia and Africa. One of the reasons for this can be large number of countries as we saw in the previous table. However, Europe has only 3 countries less than Asia but its range of life expectancy is much smaller than Asia. 
 
-Now I will explore the summaries of lifeExp by continent to find typical values. 
+Now I will explore the summaries of lifeExp by continent in the year 1952 and 2007 to find typical values through median and mean and spread via standard deviation 
+```{r}
+gapminder %>%
+  filter(year %in% c(1952,2007)) %>%
+  group_by(continent, year) %>%
+  summarize(median_lifeExp = median(lifeExp),
+            mean_lifeExp = mean(lifeExp, na.rm = TRUE),
+            standard_deviation_lifeExp = sd(lifeExp, na.rm = TRUE))
+```
+
+Now I will use boxplot for a visual exploration of the typical values and the spread over the years
+
+```{r}
+gapminder %>% 
+  select(lifeExp, year) %>%
+  mutate(year= factor(year)) %>% 
+  ggplot(aes(year, lifeExp)) +
+  scale_y_log10("Life Expectancy") +
+  geom_boxplot() + xlab("Year")
+```
+
+Now I will explore the distribution of life expectancy in one country ie. India over the years using bar graphs. 
+
+```{r}
+gapminder%>%
+  filter(country == "India")%>%
+  select(lifeExp, year) %>%
+  mutate(year = factor(year)) %>%
+  ggplot(aes(year, lifeExp)) +
+  scale_y_continuous ("Life Expectancy") +
+  geom_bar(stat = "identity") + xlab("Year")
+```
+
+Exercise 3: Explore various plot types. 
+
 ```{r}
 
 ```
 
-=======
->>>>>>> 5e7660d505f2b8c397bb7e71aba3b0ef1ed8d6a8
