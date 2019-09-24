@@ -5,7 +5,7 @@ This is my homework repo for STAT 545A course, where I will organise the five as
    **Folder**      | **Due Date** 
  ------------------|--------------
  [hw01](https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-prernagupta05/tree/master/hw01) |  Sept 17,19  
- hw02 |  Sept 24,19  
+ [hw02](https://github.com/STAT545-UBC-hw-2019-20/stat545-hw-prernagupta05/tree/master/hw02) |  Sept 24,19  
  hw03 |  Oct  01,19  
  hw04 |  Oct  08,19  
  hw05 |  Oct  18,19  
