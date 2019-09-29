@@ -1,0 +1,157 @@
+---
+title: "hw03"
+author: "Prerna Gupta"
+output: 
+  html_document: 
+    df_print: paged
+  always_allow_html: yes
+  keep_md: true
+---
+
+```{r allow errors, echo = FALSE}
+library(gapminder)
+library(dplyr)
+``` 
+
+
+Task 1 : Report the absolute and/or relative abundance of countries with low life expectancy over time by continent. 
+
+First, I will use summarise to calculate mean and median life expectancy. 
+```{r}
+gapminder %>% 
+  summarise(mean(lifeExp), median(lifeExp))
+```
+
+
+Since there is not much difference between the mean and the median. I will use the mean value. And calculate the number of countries in each continent 
+
+
+```{r}
+gapminder %>%
+  group_by(continent, year)%>%
+  mutate(total_countries = length(unique(country)))%>%
+  filter(lifeExp < 59.47444)%>%
+  group_by(continent, year)%>%
+  mutate(no_of_countries = length(unique(country)))%>%
+  mutate(percentage_of_countries= (no_of_countries/total_countries)*100)%>%
+  select(continent, year, no_of_countries, total_countries, percentage_of_countries)
+```
+
+
+
+
+```{r}
+gapminder %>%
+  group_by(continent, year)%>%
+  mutate(total_countries = length(unique(country)))%>%
+  filter(lifeExp < 59.47444)%>%
+  group_by(continent, year)%>%
+  mutate(no_of_countries = length(unique(country)))%>%
+  mutate(percentage_of_countries= (no_of_countries/total_countries)*100)%>%
+  select(continent, year, no_of_countries, lifeExp, percentage_of_countries) %>%
+  ggplot(aes(year,no_of_countries), color = continent) +
+  geom_line() +
+  facet_wrap(~continent)
+  
+```
+
+## Problems with creating bar graph[geom_bar(stat = "identity")]
+
+While, 
+
+
+Task 2: Get the maximum and minimum of GDP per capita for all continents.
+
+```{r}
+gapminder %>%
+  group_by(continent) %>%
+  filter(gdpPercap == max(gdpPercap) | gdpPercap == min(gdpPercap)) %>%
+  select(continent, year, gdpPercap) %>%
+  arrange(continent) %>%
+  as_tibble()
+```
+
+plotting these on graph 
+
+```{r}
+gapminder %>%
+  group_by(continent) %>%
+  filter(gdpPercap == max(gdpPercap) | gdpPercap == min(gdpPercap)) %>%
+  select(continent, year, gdpPercap) %>%
+  arrange(continent) %>%
+  as_tibble() %>%
+  ggplot(year, gdpPercap) + 
+  geom_bar(stat = "identity") +
+  facet_wrap(~ continent, nrow = 1)
+  
+  
+```
+
+## Error. NEED HELP. BAR GRAPH
+
+
+Task 6: Finding countries with interesting stories 
+
+I wanted to find countries that have experience a dramatic drop in their lifeExpectancy since their first recorded life Expectancy in 1952. I hypothesize that such a drop will correspond to a drastic political event in the country. 
+```{r}
+gapminder %>%
+  select(country, continent, year, lifeExp, gdpPercap) %>%
+  group_by(country)%>%
+  filter(lifeExp == first(lifeExp) | lifeExp == min(lifeExp)) %>%
+  mutate(freq = n()) %>%
+  ungroup() %>%
+  filter(freq > 2 | freq == 2)
+```
+
+From this table we find that Botswana in 2002, Cambodia in 1977, Rwanda in 1952, Swaziland in 2007, Zambia in 2002 and Zimbabwe in 2002 have experienced such an extreme low in thier lifeExpectancy. 
+
+Let us now look at the median and mean of lifeExpectancy worldwide by year. 
+
+```{r}
+gapminder %>%
+  group_by(year)%>%
+  summarise(mean_lifeExp = mean(lifeExp),
+            median_lifeExp = median(lifeExp)) %>%
+  mutate(change = (mean_lifeExp - lag(mean_lifeExp)) / lag(mean_lifeExp) * 100)
+ 
+```
+
+Calculating the slope of this graph. (not necessary perhaps)
+```{r}
+gapminder %>%
+  group_by(year)%>%
+  summarise(mean_lifeExp = mean(lifeExp),
+            median_lifeExp = median(lifeExp)) %>%
+  mutate(change = (mean_lifeExp - lag(mean_lifeExp)) / lag(mean_lifeExp) * 100) %>%
+  drop_na() %>%
+  ungroup() %>%
+  summarise(average_rate_of_change = mean(change))
+```
+
+A visual representation of the rate of change in mean_lifeExp worldwide. 
+
+```{r}
+gapminder %>%
+  group_by(year)%>%
+  summarise(mean_lifeExp = mean(lifeExp),
+            median_lifeExp = median(lifeExp)) %>%
+  ggplot(aes(year, mean_lifeExp)) +
+  geom_line() +
+  theme_bw()
+```
+
+
+
+```{r}
+gapminder %>%
+  filter(country %in% c("Botswana", "Cambodia", "Rwanda", "Swaziland", "Zambia", "Zimbabwe")) %>%
+  group_by(country, year) %>%
+  summarise(mean_lifeExp = mean(lifeExp)) %>%
+  ggplot(aes(year,mean_lifeExp, group = country, colour = country)) +
+  geom_line() +
+  theme_bw()
+```
+
+# Want to combine the above two plots in one graph for better comparison
+
+Comparing the mean life 
