@@ -3,14 +3,15 @@ title: "hw03"
 author: "Prerna Gupta"
 output: 
   html_document: 
-    df_print: paged
   always_allow_html: yes
   keep_md: true
 ---
 
-```{r allow errors, echo = FALSE}
+```{r}
 library(gapminder)
 library(dplyr)
+library(ggplot2)
+library(tidyr)
 ``` 
 
 
@@ -84,7 +85,6 @@ gapminder %>%
   geom_bar(stat = "identity") +
   facet_wrap(~ continent, nrow = 1)
   
-  
 ```
 
 ## Error. NEED HELP. BAR GRAPH
@@ -117,9 +117,10 @@ gapminder %>%
 ```
 
 Calculating the slope of this graph. (not necessary perhaps)
+
 ```{r}
 gapminder %>%
-  group_by(year)%>%
+  group_by(year) %>%
   summarise(mean_lifeExp = mean(lifeExp),
             median_lifeExp = median(lifeExp)) %>%
   mutate(change = (mean_lifeExp - lag(mean_lifeExp)) / lag(mean_lifeExp) * 100) %>%
