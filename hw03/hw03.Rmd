@@ -14,8 +14,12 @@ library(ggplot2)
 library(tidyr)
 ``` 
 
+```{r allow errors, echo = FALSE}
+knitr::opts_chunk$set(error = TRUE, warning = FALSE)
+```
 
-Task 1 : Report the absolute and/or relative abundance of countries with low life expectancy over time by continent. 
+
+# Task 1 : Report the absolute and/or relative abundance of countries with low life expectancy over time by continent. 
 
 First, I will use summarise to calculate mean and median life expectancy. 
 ```{r}
@@ -35,11 +39,16 @@ gapminder %>%
   group_by(continent, year)%>%
   mutate(no_of_countries = length(unique(country)))%>%
   mutate(percentage_of_countries= (no_of_countries/total_countries)*100)%>%
-  select(continent, year, no_of_countries, total_countries, percentage_of_countries)
+  select(continent, year, no_of_countries, total_countries, percentage_of_countries) %>%
+  arrange(continent) %>%
+  as_tibble( )
 ```
 
 
+This gives us 809 rows of data and is very time consuming to go over each row to see the absolute and relative abundance of countriies with low life Expectancy over time by continent. So we can make this data presentable through two graphs. However, due to the usage of arrange function we can easily observe that Oceania's life expectancy has been reported as above the mean life expectancy from 1952 to 2007. 
 
+
+# Graph for absolute number of countries with low life expectancy over time by continent
 
 ```{r}
 gapminder %>%
@@ -52,47 +61,64 @@ gapminder %>%
   select(continent, year, no_of_countries, lifeExp, percentage_of_countries) %>%
   ggplot(aes(year,no_of_countries), color = continent) +
   geom_line() +
-  facet_wrap(~continent)
+  facet_wrap(~continent, nrow = 1)
   
 ```
 
-## Problems with creating bar graph[geom_bar(stat = "identity")]
-
-While, 
+This graph adequately summarizes the table above and shows that the number of countries with low life expectancy are declining in each continent. However, we are unable to accurately understand how different continents are doing relative to each. 
 
 
-Task 2: Get the maximum and minimum of GDP per capita for all continents.
+# Graph for relative number of countries with low life expectancy over time by continent
 
 ```{r}
 gapminder %>%
-  group_by(continent) %>%
-  filter(gdpPercap == max(gdpPercap) | gdpPercap == min(gdpPercap)) %>%
-  select(continent, year, gdpPercap) %>%
-  arrange(continent) %>%
-  as_tibble()
+  group_by(continent, year)%>%
+  mutate(total_countries = length(unique(country)))%>%
+  filter(lifeExp < 59.47444)%>%
+  group_by(continent, year)%>%
+  mutate(no_of_countries = length(unique(country)))%>%
+  mutate(percentage_of_countries= (no_of_countries/total_countries)*100)%>%
+  select(continent, year, no_of_countries, lifeExp, percentage_of_countries) %>%
+  ggplot(aes(year,percentage_of_countries), color = continent) +
+  geom_line() +
+  facet_wrap(~continent, nrow = 1)
+  
+```
+This graph helps us better grasp how the life expectancy has been improving in each continent over time. We can observe that while the number of countries with low life expectancy have decreased steeply in the Americas, Asia and Europe, the countries in Africa have not experienced such an improvement. This is a rather worrying observation. 
+
+
+
+# Task 2: Get the maximum and minimum of GDP per capita for all continents.
+
+```{r}
+extremeGDP <- gapminder %>%
+              group_by(continent) %>%
+              summarize(min_GDP = min(gdpPercap), 
+                        max_GDP = max(gdpPercap)) %>%
+              as_tibble()
+extremeGDP %>% 
+            knitr::kable()
 ```
 
-plotting these on graph 
+I was facing dificulties with plotting these so I took help from [Harper Cheng's hw](https://stat545-ubc-hw-2019-20.github.io/stat545-hw-harpercheng91/hw03/A3.html) which was very easy for me to understand. I realised that this can be done with pivoting too that we learnt in class only today. So I stuck with the gather function. 
 
 ```{r}
-gapminder %>%
-  group_by(continent) %>%
-  filter(gdpPercap == max(gdpPercap) | gdpPercap == min(gdpPercap)) %>%
-  select(continent, year, gdpPercap) %>%
-  arrange(continent) %>%
-  as_tibble() %>%
-  ggplot(year, gdpPercap) + 
-  geom_bar(stat = "identity") +
-  facet_wrap(~ continent, nrow = 1)
+dat <- extremeGDP %>% 
+  gather(MinMax, gdp, c(min_GDP, max_GDP))
+
+ggplot(dat, aes(x=continent, y=gdp, fill=MinMax)) +
+   geom_col(position = "dodge") +
+   labs(title='Maximum and Minimum GDP per capita for Each Continent',
+          y='GDP per capita')+
+   scale_fill_brewer(palette="Set2")
   
 ```
 
-## Error. NEED HELP. BAR GRAPH
 
+# Task 6: Finding countries with interesting stories 
 
-Task 6: Finding countries with interesting stories 
+I wanted to find countries that have experience a dramatic drop in their lifeExpectancy since their first recorded life Expectancy in 1952. Such a drop would reveal countries that have not been doing so well and might help us investigate the reasons as well. 
 
-I wanted to find countries that have experience a dramatic drop in their lifeExpectancy since their first recorded life Expectancy in 1952. I hypothesize that such a drop will correspond to a drastic political event in the country. 
 ```{r}
 gapminder %>%
   select(country, continent, year, lifeExp, gdpPercap) %>%
@@ -103,7 +129,7 @@ gapminder %>%
   filter(freq > 2 | freq == 2)
 ```
 
-From this table we find that Botswana in 2002, Cambodia in 1977, Rwanda in 1952, Swaziland in 2007, Zambia in 2002 and Zimbabwe in 2002 have experienced such an extreme low in thier lifeExpectancy. 
+From this table we find that Botswana in 2002, Cambodia in 1977, Rwanda in 1992, Swaziland in 2007, Zambia in 2002 and Zimbabwe in 2002 have experienced such an extreme low in thier lifeExpectancy. Five of the six such countries lie in Africa. 
 
 Let us now look at the median and mean of lifeExpectancy worldwide by year. 
 
@@ -116,7 +142,7 @@ gapminder %>%
  
 ```
 
-Calculating the slope of this graph. (not necessary perhaps)
+Calculating the slope or the average rate of change of mean worldwide, so that we get a better idea of the rate at which life expectancy has been improving over a period of time. 
 
 ```{r}
 gapminder %>%
@@ -129,18 +155,15 @@ gapminder %>%
   summarise(average_rate_of_change = mean(change))
 ```
 
-A visual representation of the rate of change in mean_lifeExp worldwide. 
 
-```{r}
-gapminder %>%
-  group_by(year)%>%
-  summarise(mean_lifeExp = mean(lifeExp),
-            median_lifeExp = median(lifeExp)) %>%
-  ggplot(aes(year, mean_lifeExp)) +
-  geom_line() +
-  theme_bw()
+
+```{r, echo = FALSE}
+gapminder_meanlifeExp <- gapminder %>%
+                         group_by(year) %>%
+                         summarise(mean_lifeExp = mean(lifeExp),
+                                   median_lifeExp = median(lifeExp)) %>%
+                         as_tibble()
 ```
-
 
 
 ```{r}
@@ -148,11 +171,11 @@ gapminder %>%
   filter(country %in% c("Botswana", "Cambodia", "Rwanda", "Swaziland", "Zambia", "Zimbabwe")) %>%
   group_by(country, year) %>%
   summarise(mean_lifeExp = mean(lifeExp)) %>%
-  ggplot(aes(year,mean_lifeExp, group = country, colour = country)) +
-  geom_line() +
+  ggplot() +
+  geom_line(aes(year, mean_lifeExp, group = country, colour = country)) +
+  geom_line(data = gapminder_meanlifeExp, aes(x = year, y = mean_lifeExp)) +
   theme_bw()
 ```
 
-# Want to combine the above two plots in one graph for better comparison
-
-Comparing the mean life 
+This graph shows the change in life expectancy of the countries that are not doing so well with respect to this measure as compared to the average worldwide. It also explicates that life expectancy has been steadily decreasing in some of the countries like Swaziland, which is a worrying trend. 
+ 
