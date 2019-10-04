@@ -1,0 +1,49 @@
+---
+title: "hw04"
+author: "Prerna Gupta"
+output: 
+  html_document:
+  always_allow_html: yes
+  keep_md: true
+---
+
+```{r allow errors, echo = FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(singer)
+library(ggplot2)
+library(gapminder)
+knitr::opts_chunk$set(fig.width=4, fig.height=3, warning = FALSE, fig.align = "center")
+```
+.
+```{r}
+(gapminder_IndoChina <- gapminder %>%
+                filter(country %in% c("China", "India")) %>%
+                select(country, year, lifeExp))
+```
+
+```{r}
+(gapminder_wide <- gapminder_IndoChina %>%
+        pivot_wider(id_cols = c(-country, - lifeExp),
+                    names_from = country,
+                    values_from = lifeExp))
+```
+
+```{r}
+China_lifeEXp <- gapminder_wide %>%
+                select(year, China)
+
+India_lifeEXp <- gapminder_wide %>%
+                select(year, India)
+
+ggplot(gapminder, aes(year, lifeExp, colour = "country")) +
+  geom_point(data = China_lifeEXp, aes(year, China), colour = "red") +
+  geom_point(data = India_lifeEXp, aes(year, India), colour = "blue")
+  
+
+```
+
