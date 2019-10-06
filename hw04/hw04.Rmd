@@ -14,12 +14,17 @@ knitr::opts_chunk$set(error = TRUE)
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 library(tidyverse)
+guest <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/master/data/wedding/attend.csv")
+email <- read_csv("https://raw.githubusercontent.com/STAT545-UBC/Classroom/master/data/wedding/emails.csv")
 library(singer)
 library(ggplot2)
 library(gapminder)
 knitr::opts_chunk$set(fig.width=4, fig.height=3, warning = FALSE, fig.align = "center")
 ```
 .
+
+Exercise 1: 
+
 ```{r}
 (gapminder_IndoChina <- gapminder %>%
                 filter(country %in% c("China", "India")) %>%
@@ -40,10 +45,74 @@ China_lifeEXp <- gapminder_wide %>%
 India_lifeEXp <- gapminder_wide %>%
                 select(year, India)
 
-ggplot(gapminder, aes(year, lifeExp, colour = "country")) +
+ggplot() +
   geom_point(data = China_lifeEXp, aes(year, China), colour = "red") +
-  geom_point(data = India_lifeEXp, aes(year, India), colour = "blue")
-  
+  geom_point(data = India_lifeEXp, aes(year, India), colour = "blue") +
+  xlab("Year") + ylab("Life Expectancy") +
+  scale_colour_identity(guide = "legend") +
+  theme_bw()
 
 ```
+
+# need help with making legend
+
+```{r}
+gapminder_wide %>%
+  pivot_longer(cols = -year,
+               names_to = "country",
+               values_to = "lifeExp")
+```
+
+
+Exercise 2 : 
+
+```{r}
+(gapminder2_wider <- gapminder %>%
+  filter(country %in% c("China", "India")) %>%
+  select(year, country, lifeExp, gdpPercap)  %>%
+  pivot_wider(id_cols = year,
+              names_from = country,
+              names_sep = "_",
+              values_from = c(lifeExp, gdpPercap)))
+
+```
+
+```{r}
+gapminder2_wider %>%
+  pivot_longer(cols = -year,
+               names_to = c(".value", "country"),
+               names_sep = "_")
+```
+
+
+Exercise 3: 
+
+3.1 : For each guest in the guestlist (guest tibble), add a column for email address, which can be found in the email tibble.
+```{r}
+(email_name <- email %>%
+          separate_rows(guest, sep = ", ") %>%
+          rename(name = guest))
+  
+```
+
+```{r}
+guest %>%
+  left_join(email_name, by = "name")
+```
+
+3.2 : Who do we have emails for, yet are not on the guestlist?
+
+```{r}
+(guest_email <- email_name %>%
+                anti_join(guest, by = "name") %>%
+                select(email, name))
+
+```
+Three guests are not on the email list but not on the guest list
+
+3.3 : Make a guestlist that includes everyone we have emails for (in addition to those on the original guestlist)
+```{r}
+(all <- full_join(guest, email_name, by = "name"))
+```
+
 
