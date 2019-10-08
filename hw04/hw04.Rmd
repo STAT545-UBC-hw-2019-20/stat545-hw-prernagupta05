@@ -23,7 +23,9 @@ knitr::opts_chunk$set(fig.width=4, fig.height=3, warning = FALSE, fig.align = "c
 ```
 .
 
-Exercise 1: 
+# Exercise 1: Univariate Option 1
+
+1. Make a tibble with one row per year, and columns for life expectancy for two or more countries.
 
 ```{r}
 (gapminder_IndoChina <- gapminder %>%
@@ -38,6 +40,9 @@ Exercise 1:
                     values_from = lifeExp))
 ```
 
+
+2. Take advantage of this new data shape to scatterplot life expectancy for one country against that of another.
+
 ```{r}
 China_lifeEXp <- gapminder_wide %>%
                 select(year, China)
@@ -46,15 +51,16 @@ India_lifeEXp <- gapminder_wide %>%
                 select(year, India)
 
 ggplot() +
-  geom_point(data = China_lifeEXp, aes(year, China), colour = "red") +
-  geom_point(data = India_lifeEXp, aes(year, India), colour = "blue") +
-  xlab("Year") + ylab("Life Expectancy") +
-  scale_colour_identity(guide = "legend") +
+  geom_point(data = China_lifeEXp, aes(year, China, colour = "China_lifeEXp")) +
+  geom_point(data = India_lifeEXp, aes(year, India, colour = "India_lifeEXp")) +
+  xlab("Year") + ylab("Life Expectancy") + ggtitle("Life Expectancy of China and India") +
+  scale_colour_manual("country", values = c("China_lifeEXp"= "red", "India_lifeEXp" = "blue")) +
   theme_bw()
 
 ```
 
-# need help with making legend
+
+3. Re-lengthen the data.
 
 ```{r}
 gapminder_wide %>%
@@ -64,7 +70,9 @@ gapminder_wide %>%
 ```
 
 
-Exercise 2 : 
+# Exercise 2 : Multivariate Option 1
+
+1. Make a tibble with one row per year, and columns for life expectancy and GDP per capita (or two other numeric variables) for two or more countries.
 
 ```{r}
 (gapminder2_wider <- gapminder %>%
@@ -77,6 +85,8 @@ Exercise 2 :
 
 ```
 
+2. Re-lengthen the data.
+
 ```{r}
 gapminder2_wider %>%
   pivot_longer(cols = -year,
@@ -85,7 +95,7 @@ gapminder2_wider %>%
 ```
 
 
-Exercise 3: 
+Exercise 3: Table Joins
 
 3.1 : For each guest in the guestlist (guest tibble), add a column for email address, which can be found in the email tibble.
 ```{r}
@@ -108,7 +118,8 @@ guest %>%
                 select(email, name))
 
 ```
-Three guests are not on the email list but not on the guest list
+Three guests are on the email list but not on the guest list
+
 
 3.3 : Make a guestlist that includes everyone we have emails for (in addition to those on the original guestlist)
 ```{r}
